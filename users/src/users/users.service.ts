@@ -4,9 +4,7 @@ import {Injectable} from '@nestjs/common';
 export class UsersService {
 
     findAll(): any[] {
-        return [
-            {id: 1, name: 'Daniel', username: 'danicalifornia'}
-        ]
+        return [{id: 1, name: 'Daniel', username: 'danicalifornia'}]
     }
 
     findByUsername(username: string): any {
