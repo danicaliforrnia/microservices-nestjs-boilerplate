@@ -10,8 +10,8 @@ import {Role} from "../../models/role";
             host: 'localhost',
             port: 5432,
             username: 'postgres',
-            password: 'postgres',
-            database: 'users',
+            password: '12345678',
+            database: 'microservices',
             entities: [User, Role],
             synchronize: true
         })
