@@ -2,22 +2,25 @@ import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
-    Entity, JoinColumn,
+    Entity,
+    JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
 import {Role} from "./role";
+import {Exclude} from 'class-transformer';
 
 @Entity({
     name: 'user',
     schema: 'users'
 })
 export class User {
+
     @PrimaryGeneratedColumn({
         name: 'usr_id'
     })
-    id: number;
+    readonly id: number;
 
     @Column({
         name: 'usr_username',
@@ -43,12 +46,14 @@ export class User {
     @Column({
         name: 'usr_password',
         length: 60,
-        type: 'varchar'
+        type: 'varchar',
+        nullable: true
     })
+    @Exclude()
     password: string;
 
-    @ManyToOne(() => Role, {
-        lazy: true,
+    @ManyToOne(() => Role, (role: Role) => role.users, {
+        lazy: false,
         nullable: false
     })
     @JoinColumn({
@@ -58,22 +63,31 @@ export class User {
 
     @Column({
         name: 'usr_active',
-        type: 'boolean'
+        type: 'boolean',
+        default: true
     })
+    @Exclude()
     isActive: boolean;
 
     @CreateDateColumn({
-        name: 'usr_created_at'
+        name: 'usr_created_at',
+        select: false
     })
     createdAt: Date;
 
     @UpdateDateColumn({
-        name: 'usr_updated_at'
+        name: 'usr_updated_at',
+        select: false
     })
     updatedAt: Date;
 
     @DeleteDateColumn({
-        name: 'usr_deleted_at'
+        name: 'usr_deleted_at',
+        select: false
     })
     deletedAt: Date;
+
+    constructor(partial: Partial<User>) {
+        Object.assign(this, partial);
+    }
 }

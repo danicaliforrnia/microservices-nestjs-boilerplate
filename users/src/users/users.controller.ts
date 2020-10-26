@@ -1,36 +1,39 @@
-import {Controller} from '@nestjs/common';
+import {ClassSerializerInterceptor, Controller, UseInterceptors} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {MessagePattern} from '@nestjs/microservices';
+import {User} from "../models/user";
+import {UserDto} from "../dtos/user-dto";
 
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
 
     constructor(private readonly usersService: UsersService) {
     }
 
     @MessagePattern({cmd: "find_all_users"})
-    findAll(): any[] {
+    findAll(): Promise<User[]> {
         return this.usersService.findAll();
     }
 
     @MessagePattern({cmd: "find_user_by_username"})
-    findByUsername(username: string): any {
+    findByUsername(username: string): Promise<User> {
         return this.usersService.findByUsername(username);
     }
 
     @MessagePattern({cmd: "create_user"})
-    create(user: any): any {
+    create(user: UserDto): Promise<User> {
         return this.usersService.create(user);
     }
 
     @MessagePattern({cmd: "update_user"})
-    update(user: any): any {
-        return this.usersService.update(user);
+    update(id: number, user: UserDto): Promise<User> {
+        return this.usersService.update(id, user);
     }
 
     @MessagePattern({cmd: "delete_user"})
-    delete(usrId: number) {
-        return this.usersService.delete(usrId);
+    delete(id: number): Promise<number> {
+        return this.usersService.delete(id);
     }
 
 }
