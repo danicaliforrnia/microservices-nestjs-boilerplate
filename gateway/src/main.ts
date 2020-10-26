@@ -6,6 +6,7 @@ const logger = new Logger('Main');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
   await app.listen(3000, () => {
     logger.log('Gateway is listening at port 3000...')
   });
